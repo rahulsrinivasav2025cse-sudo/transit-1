@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transit Fleet Management</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+        <div class="brand">🚌 Transit Ops</div>
+        <nav>
+            <button class="nav-btn active" data-tab="dashboard">Dashboard</button>
+            <button class="nav-btn" data-tab="buses">Buses</button>
+            <button class="nav-btn" data-tab="routes">Routes</button>
+            <button class="nav-btn" data-tab="contacts">Contacts</button>
+            <button class="nav-btn" data-tab="tickets">Ticketing</button>
+            <button class="nav-btn" data-tab="purchasing">Fuel &amp; Maintenance</button>
+            <button class="nav-btn" data-tab="reports">Reports</button>
+        </nav>
+    </aside>
+
+    <main class="content">
+
+        <!-- DASHBOARD -->
+        <section id="tab-dashboard" class="tab active">
+            <h1>Dashboard</h1>
+            <div class="cards" id="dashboard-cards">
+                <div class="card"><div class="card-label">Buses</div><div class="card-value" id="stat-buses">–</div></div>
+                <div class="card"><div class="card-label">Routes</div><div class="card-value" id="stat-routes">–</div></div>
+                <div class="card"><div class="card-label">Tickets Sold</div><div class="card-value" id="stat-tickets">–</div></div>
+                <div class="card"><div class="card-label">Unpaid Vendor Bills</div><div class="card-value" id="stat-bills">–</div></div>
+            </div>
+            <p class="hint">Use the sidebar to manage fleet data, book tickets, record fuel &amp; maintenance
+                spend, and view financial reports.</p>
+        </section>
+
+        <!-- BUSES -->
+        <section id="tab-buses" class="tab">
+            <h1>Buses</h1>
+            <form id="form-bus" class="inline-form">
+                <input type="text" name="registrationNumber" placeholder="Registration No. (e.g. BUS-101)" required />
+                <input type="text" name="model" placeholder="Model (e.g. Volvo 9400)" />
+                <input type="number" name="capacity" placeholder="Capacity" required min="1" />
+                <select name="status">
+                    <option value="ACTIVE">Active</option>
+                    <option value="MAINTENANCE">Maintenance</option>
+                    <option value="INACTIVE">Inactive</option>
+                </select>
+                <button type="submit">Add Bus</button>
+            </form>
+            <table id="table-buses">
+                <thead><tr><th>ID</th><th>Registration</th><th>Model</th><th>Capacity</th><th>Status</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </section>
+
+        <!-- ROUTES -->
+        <section id="tab-routes" class="tab">
+            <h1>Routes</h1>
+            <form id="form-route" class="inline-form">
+                <input type="text" name="routeCode" placeholder="Route Code (e.g. R-101)" required />
+                <input type="text" name="routeName" placeholder="Route Name (e.g. Urban Express)" required />
+                <input type="text" name="startPoint" placeholder="Start Point" />
+                <input type="text" name="endPoint" placeholder="End Point" />
+                <input type="number" name="distanceKm" placeholder="Distance (km)" step="0.1" />
+                <input type="number" name="baseFare" placeholder="Base Fare" step="0.01" required />
+                <button type="submit">Add Route</button>
+            </form>
+            <table id="table-routes">
+                <thead><tr><th>ID</th><th>Code</th><th>Name</th><th>From</th><th>To</th><th>Distance (km)</th><th>Base Fare</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </section>
+
+        <!-- CONTACTS -->
+        <section id="tab-contacts" class="tab">
+            <h1>Contacts</h1>
+            <form id="form-contact" class="inline-form">
+                <input type="text" name="name" placeholder="Full name" required />
+                <select name="type" required>
+                    <option value="PASSENGER">Passenger</option>
+                    <option value="MAINTENANCE_CONTRACTOR">Maintenance Contractor</option>
+                    <option value="FUEL_VENDOR">Fuel Vendor</option>
+                </select>
+                <input type="text" name="phone" placeholder="Phone" />
+                <input type="email" name="email" placeholder="Email" />
+                <button type="submit">Add Contact</button>
+            </form>
+            <table id="table-contacts">
+                <thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Phone</th><th>Email</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </section>
+
+        <!-- TICKETING -->
+        <section id="tab-tickets" class="tab">
+            <h1>Ticketing</h1>
+
+            <div class="panel">
+                <h2>Book a ticket</h2>
+                <form id="form-ticket" class="inline-form">
+                    <select name="passengerId" id="select-passenger" required><option value="">Passenger…</option></select>
+                    <select name="routeId" id="select-route" required><option value="">Route…</option></select>
+                    <select name="busId" id="select-bus" required><option value="">Bus…</option></select>
+                    <input type="text" name="seatNumber" placeholder="Seat (e.g. 12A)" required />
+                    <input type="date" name="travelDate" required />
+                    <button type="submit">Book Ticket</button>
+                </form>
+                <div id="ticket-feedback" class="feedback"></div>
+            </div>
+
+            <table id="table-tickets">
+                <thead>
+                <tr><th>Booking Ref</th><th>Passenger</th><th>Route</th><th>Bus</th><th>Seat</th>
+                    <th>Travel Date</th><th>Fare</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+
+        <!-- PURCHASING -->
+        <section id="tab-purchasing" class="tab">
+            <h1>Fuel &amp; Maintenance</h1>
+
+            <div class="panel">
+                <h2>New purchase order</h2>
+                <form id="form-po" class="inline-form">
+                    <select name="vendorId" id="select-vendor" required><option value="">Vendor…</option></select>
+                    <select name="productId" id="select-product" required><option value="">Product…</option></select>
+                    <input type="number" name="quantity" placeholder="Quantity" min="1" required />
+                    <button type="submit">Create PO</button>
+                </form>
+            </div>
+
+            <table id="table-po">
+                <thead><tr><th>PO Number</th><th>Vendor</th><th>Product</th><th>Qty</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody></tbody>
+            </table>
+
+            <table id="table-bills">
+                <thead><tr><th>Bill Number</th><th>Vendor</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </section>
+
+        <!-- REPORTS -->
+        <section id="tab-reports" class="tab">
+            <h1>Reports</h1>
+
+            <div class="report-grid">
+                <div class="panel">
+                    <h2>Profit &amp; Loss</h2>
+                    <div class="report-controls">
+                        <input type="date" id="pnl-from" />
+                        <input type="date" id="pnl-to" />
+                        <button id="btn-pnl">Run</button>
+                    </div>
+                    <pre id="report-pnl" class="report-output">Run the report to see results.</pre>
+                </div>
+
+                <div class="panel">
+                    <h2>Balance Sheet</h2>
+                    <div class="report-controls">
+                        <input type="date" id="bs-date" />
+                        <button id="btn-bs">Run</button>
+                    </div>
+                    <pre id="report-bs" class="report-output">Run the report to see results.</pre>
+                </div>
+
+                <div class="panel">
+                    <h2>Budget Variance</h2>
+                    <div class="report-controls">
+                        <button id="btn-budget">Run</button>
+                    </div>
+                    <pre id="report-budget" class="report-output">Run the report to see results.</pre>
+                </div>
+
+                <div class="panel">
+                    <h2>Route Utilization</h2>
+                    <div class="report-controls">
+                        <select id="util-route"><option value="">Route…</option></select>
+                        <input type="date" id="util-from" />
+                        <input type="date" id="util-to" />
+                        <button id="btn-util">Run</button>
+                    </div>
+                    <pre id="report-util" class="report-output">Run the report to see results.</pre>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
